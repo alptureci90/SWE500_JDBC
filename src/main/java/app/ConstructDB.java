@@ -13,32 +13,23 @@ public class ConstructDB {
         //create authors
         createAuthors();
 
+        //create publishers
+        createPublishers();
+
         //create authorISBN
         createISBN();
     }
 
     public void createAuthors(){
-        if (connection != null){
-            try{
-                //Create Authors Table
-                String createAuthor = "create table authors (authorID serial primary key, firstName varchar(20), lastName varchar(20));";
-                PreparedStatement statement = connection.prepareStatement(createAuthor);
-                statement.execute();
-            } catch (SQLException e){
-                System.out.println("Error creating table: authors");
-                System.out.println(e.getMessage());
-                ConnectToDB.closeConnection(connection);
-            }
-        }
+        //create authors
+        String createAuthor = "create table authors (authorID serial primary key, firstName varchar(20), lastName varchar(20));";
+        createTable("authors", createAuthor);
     }
 
     public void createPublishers(){
-        if(connection != null){
             // Create Publishers Table
             String createPublishers = "create table publishers(publisherID serial primary key , publisherName char(100));";
-            PreparedStatement statement = connection.prepareStatement(createPublishers);
-            statement.execute()
-        }
+            createTable("publishers", createPublishers);
     }
 
     public void createISBN(){
@@ -46,11 +37,18 @@ public class ConstructDB {
         runStatement(createAuthor);
     }
 
-    // check if table exists
-    public boolean checkIfTableExits(String tableName){
-        String statement =
-
+    //create table
+    public boolean createTable(String tableName, String createStatement){
+        if (!isTableExist(tableName)){
+            return runStatement(createStatement);
+        }
         return false;
+    }
+
+    // check if table exists
+    public boolean isTableExist(String tableName){
+        String statement = "select exists(select 1 from information_schema.tables where table_name = '" + tableName + "');";
+        return runStatement(statement);
     }
 
     // returns success or failure
@@ -58,13 +56,15 @@ public class ConstructDB {
         if (connection != null){
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(statement);
-                preparedStatement.execute();
+                return preparedStatement.execute();
             } catch (SQLException e){
                 System.out.println("Error creating table: authors");
                 System.out.println(e.getMessage());
                 ConnectToDB.closeConnection(connection);
+                return false;
             }
         }
+        return false;
     }
 
     // Returns a result set
@@ -80,6 +80,7 @@ public class ConstructDB {
                 return null;
             }
         }
+        return null;
     }
 
 }
