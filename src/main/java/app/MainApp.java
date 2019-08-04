@@ -24,10 +24,18 @@ public class MainApp {
         //ConstructDB constructDB = new ConstructDB();
 
         // Populate the DB
-        AutoPopulateDB autoPopulateDB = new AutoPopulateDB();
+        //AutoPopulateDB autoPopulateDB = new AutoPopulateDB();
+
+
+        // Retrieve info
+        //i.e. TEST i.e. getAllAuthors
+        QueryDatabase qdb = new QueryDatabase();
+        qdb.getAllAuthors();
 
 
         //runService();
+
+
 
     }
 
