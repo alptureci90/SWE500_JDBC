@@ -11,37 +11,50 @@ public class ConstructDB {
         connection = ConnectToDB.getConnection();
 
         //create authors
-        createAuthors();
+        createAuthorsTable();
 
         //create publishers
-        createPublishers();
+        createPublishersTable();
+
+        //create titles
+        createTitleTable();
 
         //create authorISBN
-        createISBN();
+        createAuthorISBN();
+
+        // Fill
     }
 
-    public void createAuthors(){
+    public void createAuthorsTable(){
         //create authors
         String createAuthor = "create table authors (authorID serial primary key, firstName varchar(20), lastName varchar(20));";
         createTable("authors", createAuthor);
     }
 
-    public void createPublishers(){
-            // Create Publishers Table
-            String createPublishers = "create table publishers(publisherID serial primary key , publisherName char(100));";
-            createTable("publishers", createPublishers);
+    public void createPublishersTable(){
+        // Create Publishers Table
+        String createPublishers = "create table publishers(publisherID serial primary key , publisherName char(100));";
+        createTable("publishers", createPublishers);
     }
 
-    public void createISBN(){
-        String createAuthor = "create table publishers(publisherID serial primary key , publisherName char(100));";
-        runStatement(createAuthor);
+    public void createTitleTable(){
+        // Create Title Table
+        String createTitle = "create table titles (isbn char(10), title varchar(500), editionNumber int, year char(4), publisherID int, price NUMERIC(8,2));";
+        createTable("titles", createTitle);
+    }
+
+    public void createAuthorISBN(){
+        String createAuthorISBN = "create table authorISBN (authorID serial primary key , isbn char(10));";
+        createTable("authorISBN", createAuthorISBN);
     }
 
     //create table
     public boolean createTable(String tableName, String createStatement){
         if (!isTableExist(tableName)){
+            System.out.println("Creating table: " + tableName);
             return runStatement(createStatement);
         }
+        System.out.println("Table exists: " + tableName + " exists, skipping create!");
         return false;
     }
 
