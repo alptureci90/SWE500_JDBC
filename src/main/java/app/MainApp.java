@@ -7,9 +7,8 @@ public class MainApp {
 
     public static void main(String[] args){
 
-
+        // Registering the Driver...
         try{
-            // Registering the Driver...
             Class.forName("org.postgresql.Driver");
         }
         catch (ClassNotFoundException e){
@@ -20,14 +19,14 @@ public class MainApp {
         //ConnectToDB.testDBConnection();
 
         // Construct the tables
-        //TODO: add foreign key parameters
-        //ConstructDB constructDB = new ConstructDB();
+        // TODO: add foreign key parameters
+        // ConstructDB constructDB = new ConstructDB();
 
         // Populate the DB
-        //AutoPopulateDB autoPopulateDB = new AutoPopulateDB();
+        // AutoPopulateDB autoPopulateDB = new AutoPopulateDB();
 
 
-        // Retrieve info
+        // Under Development: Retrieve info
         //i.e. TEST i.e. getAllAuthors
         QueryDatabase qdb = new QueryDatabase();
         qdb.getAllAuthors();

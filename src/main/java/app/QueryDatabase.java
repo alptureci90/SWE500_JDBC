@@ -13,13 +13,19 @@ public class QueryDatabase {
 
     }
 
-    public void getAllAuthors(){
+    public void getAllAuthors(String orderInfo){
         Connection connection = ConnectToDB.getConnection();
         try {
-            String s = "select * from authors;";
+            String s = "select * from authors order by ?;";
             PreparedStatement ps = connection.prepareStatement(s);
+            ps.setString(1, orderInfo);
             ResultSet rs = ps.executeQuery();
-            Author a = new Author(rs.getString("firstName"), rs.getString("lastName"));
+            while (rs.next()){
+                Author a = new Author();
+                a.setAuthorID(rs.getInt("authorID"));
+                a.setFirstName(rs.getString("firstName"));
+                a.setLastName("lastName");
+            }
             System.out.println(rs.findColumn("lastName"));
         } catch (SQLException e){
 

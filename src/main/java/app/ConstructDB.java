@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class ConstructDB {
     Connection connection;
-
+// TODO: ADD Foreign KEYS
 
     public ConstructDB(){
         //Get Connection
@@ -39,12 +39,12 @@ public class ConstructDB {
 
     public void createTitleTable(){
         // Create Title Table
-        String createTitle = "create table titles (isbn char(10), title varchar(500), editionNumber int, year char(4), publisherID int, price NUMERIC(8,2));";
+        String createTitle = "create table titles (isbn char(10) primary key, title varchar(500), editionNumber int, year char(4), publisherID int, price NUMERIC(8,2));";
         createTable("titles", createTitle);
     }
 
     public void createAuthorISBN(){
-        String createAuthorISBN = "create table authorISBN (authorID serial primary key , isbn char(10));";
+        String createAuthorISBN = "create table authorISBN (authorID int, isbn char(10));";
         createTable("authorISBN", createAuthorISBN);
     }
 
@@ -61,6 +61,8 @@ public class ConstructDB {
     // check if table exists
     public boolean isTableExist(String tableName){
         String statement = "select exists(select 1 from information_schema.tables where table_name = '" + tableName + "');";
+        // TODO: buraya bak. bunu duzeltmem lazim
+        ConnectToDB.closeConnection(connection);
         return runStatement(statement);
     }
 
