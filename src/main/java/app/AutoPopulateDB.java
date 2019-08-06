@@ -13,16 +13,19 @@ public class AutoPopulateDB {
         connection = ConnectToDB.getConnection();
 
         // Fill Authors
-        fillAuthors();
+        //fillAuthors();
 
         // Fill Publishers
-        fillPublishers();
+        //fillPublishers();
 
         // Fill Titles
         fillTitles();
 
         // Fill AuthorISBN
         fillAuthorISBN();
+
+        // Close Connection
+        ConnectToDB.closeConnection(connection);
     }
 
     public void fillAuthors(){
@@ -31,7 +34,10 @@ public class AutoPopulateDB {
         String listString = "Dan Brown, JK Rownling, Stephen King, RK Narayan, Agatha Christie, Cheten Bhagat, " +
                 "William Shakespeare, Leo Tolstoy, Charles Dickens, Mark Twain, Nola Roberts, Jane Austen, CS Lewis, James Patterson, MK Ghandi";
 
-        String[] arrayAuthors = listString.split(", ");
+        String listString2 = "JK Rownling, Stephen King, RK Narayan, Agatha Christie, Cheten Bhagat, " +
+                "William Shakespeare, Leo Tolstoy, Charles Dickens, Mark Twain, Nola Roberts, Jane Austen, CS Lewis, James Patterson, MK Ghandi";
+
+        String[] arrayAuthors = listString2.split(", ");
 
         for (String author : arrayAuthors){
             String[] fullName = author.split(" ");
@@ -73,7 +79,7 @@ public class AutoPopulateDB {
                             "5050505050, Romeo and Juliet, 1, 1603, 15.25, 6;" +
                             "6060606060, Game of Thrones, 1, 2001, 75.68, 9";
 
-        String[] arrayTitles = listTitles.split("; ");
+        String[] arrayTitles = listTitles.split(";");
 
         for (String t : arrayTitles){
             String[] title = t.split(", ");
@@ -82,6 +88,28 @@ public class AutoPopulateDB {
     }
 
     public void fillAuthorISBN(){
+        String authorISBN = "2 1000110001," +
+                            "1 2000220002," +
+                            "3 3000330003," +
+                            "14 3000330003," +
+                            "14 4000440004," +
+                            "6 5000550005," +
+                            "8 6000660006," +
+                            "5 7000770007," +
+                            "10 8000880008," +
+                            "4 9000990009," +
+                            "2 1010101010," +
+                            "7 5050505050," +
+                            "12 6060606060," +
+                            "1 2020202020," +
+                            "6 3030303030," +
+                            "2 4040404040";
+
+        String[] arrayAuthorISBN = authorISBN.split(",");
+        for(String line : arrayAuthorISBN){
+            String[] author_isbn = line.split(" ");
+            pushAuthorISBN(Integer.parseInt(author_isbn[0]), author_isbn[1]);
+        }
 
     }
 
@@ -128,11 +156,23 @@ public class AutoPopulateDB {
         }
     }
 
+    public void pushAuthorISBN(Integer authorID, String isbn){
+        String STATEMENT = "insert into authorISBN (authorID, isbn) values (?,?);";
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(STATEMENT);
+            preparedStatement.setInt(1, authorID);
+            preparedStatement.setString(2, isbn);
+            executeStatement(preparedStatement);
+        } catch (SQLException e){
+            System.out.println("Error in prepared statement: pushAuthorISBN");
+            e.getMessage();
+        }
+    }
+
     public boolean executeStatement(PreparedStatement ps){
         try{
             ps.execute();
             System.out.println("Execution Successfull;");
-            ConnectToDB.closeConnection(connection);
             return true;
         } catch (SQLException e){
             System.out.println("Error in execution");

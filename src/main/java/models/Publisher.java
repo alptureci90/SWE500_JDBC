@@ -9,6 +9,10 @@ public class Publisher {
         return publisherID;
     }
 
+    public void setPublisherID(int publisherID) {
+        this.publisherID = publisherID;
+    }
+
     public String getPublisherName() {
         return publisherName;
     }

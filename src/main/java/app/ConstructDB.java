@@ -4,11 +4,13 @@ import java.sql.*;
 
 public class ConstructDB {
     Connection connection;
-// TODO: ADD Foreign KEYS
 
     public ConstructDB(){
         //Get Connection
         connection = ConnectToDB.getConnection();
+
+        // TEST
+        // getAllTablesFromDB();
 
         //create authors
         createAuthorsTable();
@@ -22,7 +24,8 @@ public class ConstructDB {
         //create authorISBN
         createAuthorISBN();
 
-        // Fill
+        // Close Connection
+        ConnectToDB.closeConnection(connection);
     }
 
     public void createAuthorsTable(){
@@ -39,18 +42,18 @@ public class ConstructDB {
 
     public void createTitleTable(){
         // Create Title Table
-        String createTitle = "create table titles (isbn char(10) primary key, title varchar(500), editionNumber int, year char(4), publisherID int, price NUMERIC(8,2));";
+        String createTitle = "create table titles (isbn char(10) primary key, title varchar(500), editionNumber int, year char(4), publisherID int references publishers(publisherID), price NUMERIC(8,2));";
         createTable("titles", createTitle);
     }
 
     public void createAuthorISBN(){
-        String createAuthorISBN = "create table authorISBN (authorID int, isbn char(10));";
+        String createAuthorISBN = "create table authorISBN (authorID int references authors(authorID), isbn char(10) references titles(isbn));";
         createTable("authorISBN", createAuthorISBN);
     }
 
     //create table
     public boolean createTable(String tableName, String createStatement){
-        if (!isTableExist(tableName)){
+        if (!isTableExist2(tableName)){
             System.out.println("Creating table: " + tableName);
             return runStatement(createStatement);
         }
@@ -59,11 +62,21 @@ public class ConstructDB {
     }
 
     // check if table exists
-    public boolean isTableExist(String tableName){
-        String statement = "select exists(select 1 from information_schema.tables where table_name = '" + tableName + "');";
-        // TODO: buraya bak. bunu duzeltmem lazim
-        ConnectToDB.closeConnection(connection);
-        return runStatement(statement);
+    public boolean isTableExist2(String tableName){
+        try {
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet rs = dbm.getTables(null, null, tableName, null);
+            if (rs.next()) {
+                System.out.println("Table exists");
+                return true;
+            } else {
+                System.out.println("Table does not exist");
+                return false;
+            }
+        } catch (SQLException e){
+            System.out.println("We are fucked!");
+        }
+        return false;
     }
 
     // returns success or failure
@@ -96,6 +109,27 @@ public class ConstructDB {
             }
         }
         return null;
+    }
+
+
+    // Test Method
+    public void getAllTablesFromDB(){
+        String st = "select * from information_schema.tables;";
+        try{
+            PreparedStatement ps = connection.prepareStatement(st);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                System.out.println(rs.getString(1)
+                        + "||" + rs.getString(2)
+                        + "||" + rs.getString(3));
+
+            }
+        } catch (SQLException e){
+            System.out.println("ERRRRRORRRr");
+        }
+
     }
 
 }

@@ -19,30 +19,42 @@ public class MainApp {
         //ConnectToDB.testDBConnection();
 
         // Construct the tables
-        // TODO: add foreign key parameters
-        // ConstructDB constructDB = new ConstructDB();
+        //ConstructDB constructDB = new ConstructDB();
 
         // Populate the DB
-        // AutoPopulateDB autoPopulateDB = new AutoPopulateDB();
+        //AutoPopulateDB autoPopulateDB = new AutoPopulateDB();
 
 
         // Under Development: Retrieve info
         //i.e. TEST i.e. getAllAuthors
-        QueryDatabase qdb = new QueryDatabase();
-        qdb.getAllAuthors();
+        //QueryDatabase qdb = new QueryDatabase();
+        //qdb.getAllAuthors();
 
 
-        //runService();
+        runService();
 
 
 
     }
 
     public static void runService(){
+        String defOrderInfo =  "\n\t\t\tDefault ordering is ASC." +
+                                "\n\t\t\tFor DESC please type DESC at the end.";
+        String help = " --get authors : retrieves all authors." + defOrderInfo +
+                    "\n --get publishers : retrieves all publishers. " + defOrderInfo +
+                    "\n --get titles : retrieves all titles." + defOrderInfo +
+                    "\n --list -p <publisher name> : lists all the available inventory for that publisher." + defOrderInfo +
+                    "\n --add -a <First Name> <Last Name>" +
+                    "\n --update -a <id> <new First Name> <new Last Name>" +
+                    "\n --add -t <isbn(char(10))> <title(char(500))> <editionNumber(int)> <year(char(4))> <price(float(8,2))> <publisher name or id>" +
+                    "\n --add -p <publisher name>" +
+                    "\n --update -p <id> <new name>";
+
         Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
-                System.out.println("Please input a line");
+                System.out.println("Please input a operation number you would like to run");
+                System.out.println(help);
                 long then = System.currentTimeMillis();
                 String line = scanner.nextLine();
                 long now = System.currentTimeMillis();
