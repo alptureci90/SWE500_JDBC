@@ -13,10 +13,10 @@ public class AutoPopulateDB {
         connection = ConnectToDB.getConnection();
 
         // Fill Authors
-        //fillAuthors();
+        fillAuthors();
 
         // Fill Publishers
-        //fillPublishers();
+        fillPublishers();
 
         // Fill Titles
         fillTitles();
