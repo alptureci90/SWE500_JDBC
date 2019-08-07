@@ -40,7 +40,27 @@ public class TitleService {
     }
 
     public void addTitle(String isbn, String title, int editionNumber, String year, int publisherID, float price){
+        String STATEMENT = "INSERT INTO titles (isbn, title, editionnumber, year, publisherid, price) VALUES (?,?,?,?,?,?);";
+        // Check if authorID exists
+        // Check if publisherID exists
 
+        // after add is done, insert record to mapping table
+        boolean result = true;
+        try {
+            PreparedStatement preparedStatement = queryDatabase.connection.prepareStatement(STATEMENT);
+            preparedStatement.setString(1,isbn);
+            preparedStatement.setString(2,title);
+            preparedStatement.setInt(3,editionNumber);
+            preparedStatement.setString(4, year);
+            preparedStatement.setInt(5, publisherID);
+            preparedStatement.setFloat(6,price);
+            preparedStatement.execute();
+            queryDatabase.connection.close();
+            System.out.println("Adding to the publishers: SUCCESS!");
+        } catch (SQLException e){
+            System.out.println("FAILURE!");
+            ConnectToDB.closeConnection(queryDatabase.connection);
+        }
     }
 
     private ArrayList<Title> mapResultSet2TitleList(ResultSet resultSet){

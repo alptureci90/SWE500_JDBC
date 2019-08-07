@@ -32,9 +32,9 @@ public class QueryDatabase {
     public boolean execute(String STATEMENT){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(STATEMENT);
-            boolean result = preparedStatement.execute();
+            preparedStatement.execute();
             connection.close();
-            return result;
+            return true;
         } catch (SQLException e){
             System.out.println("Unsuccessful retrieving information");
             ConnectToDB.closeConnection(connection);

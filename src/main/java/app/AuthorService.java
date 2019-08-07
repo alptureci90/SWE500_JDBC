@@ -31,8 +31,25 @@ public class AuthorService {
         String STATEMENT = "INSERT INTO authors (firstname, lastname) values ('"+ firstName +"','"+lastName+"');";
         if (queryDatabase.execute(STATEMENT)){
             System.out.println("Adding to the authors: SUCCESS!");
+        } else {
+            System.out.println("FAILURE!");
         }
-        System.out.println("FAILURE!");
+    }
+
+    public boolean isIDExists(int id){
+        String STATEMENT = "select exists(select 1 from authors where authorid = " + id + ");";
+        ResultSet resultSet = queryDatabase.executeQuery(STATEMENT);
+        if (resultSet != null){
+            try{
+                while (resultSet.next()){
+                    return resultSet.getBoolean(1);
+                }
+            } catch (SQLException e){
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
+        return false;
     }
 
     private ArrayList<Author> mapResultSet2AuthorList(ResultSet resultSet){

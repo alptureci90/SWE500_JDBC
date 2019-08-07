@@ -1,11 +1,14 @@
 package main.java.app;
 
+import main.java.models.Publisher;
 import sun.applet.Main;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class MainApp {
+
+    static final Scanner scan = new Scanner(System.in);
 
     static final String DEF_ORDER_INFO =  "\n\t\t\tDefault ordering is ASC." +
             "\n\t\t\tFor DESC please type DESC at the end.";
@@ -16,7 +19,14 @@ public class MainApp {
             "\n --get -p <publisher name> : lists all the available inventory for that publisher." + DEF_ORDER_INFO +
             "\n --add -a <First Name> <Last Name>" +
             "\n --update -a <id> <new First Name> <new Last Name>" +
-            "\n --add -t <isbn(char(10))> <title(char(500))> <editionNumber(int)> <year(char(4))> <price(float(8,2))> <publisher name or id>" +
+            "\n --add -t" +
+                    "\n\t-a <authorID> " +
+                    "\n\t-i <isbn(char(10))> " +
+                    "\n\t-tn <title(char(500))> " +
+                    "\n\t-e <editionNumber(int)> " +
+                    "\n\t-y <year(char(4))> " +
+                    "\n\t-d <price(float(8,2))> " +
+                    "\n\t-p <publisherId>" +
             "\n --add -p <publisher name>" +
             "\n --update -p <id> <new name>";
 
@@ -56,12 +66,12 @@ public class MainApp {
 
     public void runService(){
         System.out.println(HELP);
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
                 System.out.println("Please input a operation number you would like to run");
                 long then = System.currentTimeMillis();
-                String userInput = scanner.nextLine();
+                String userInput = scan.nextLine();
                 decision(userInput);
                 long now = System.currentTimeMillis();
                 System.out.printf("Waited %.3fs for user input%n", (now - then) / 1000d);
@@ -160,15 +170,78 @@ public class MainApp {
                     authorService.addAuthor(arr_user_input[2], arr_user_input[3]);
                     break;
                 case "-p":
+                    StringBuilder sb = new StringBuilder();
+                    for(int i = 2; i < arr_user_input.length; i++){
+                        sb.append(arr_user_input[i] + " ");
+                    }
                     PublisherService publisherService = new PublisherService();
-                    publisherService.addPublisher(arr_user_input[2]);
+                    publisherService.addPublisher(sb.toString());
                     break;
                 case "-t":
+                    boolean author_stat = false;
+                    int authorID = 0;
+                    while (!author_stat){
+                        System.out.println("please provide a valid Author ID");
+                        String id = scan.nextLine();
+                        if (id.equals("exit")){break;}
+                        AuthorService as = new AuthorService();
+                        author_stat = as.isIDExists(Integer.parseInt(id));
+                        if (author_stat){authorID = Integer.parseInt(id);}
+                    }
+
+                    boolean publisher_stat = false;
+                    int publisherID = 0;
+                    while (!publisher_stat){
+                        System.out.println("please provide a valid Publisher ID");
+                        String pubID = scan.nextLine();
+                        if (pubID.equals("exit")){break;}
+                        PublisherService ps = new PublisherService();
+                        publisher_stat = ps.isIDExists(Integer.parseInt(pubID));
+                        if (publisher_stat){publisherID = Integer.parseInt(pubID);}
+                    }
+
+                    boolean isbn_stat = false;
+                    String isbn = "";
+                    while (!isbn_stat){
+                        System.out.println("Please provide isbn\n");
+                        String is = scan.nextLine();
+                        if (is.equals("exit")){break;}
+                        else if (is.trim().length() == 10){isbn_stat = true;}
+                        isbn = is;
+                    }
+
+
+                    System.out.println("Please provide title\n");
+                    String title = scan.nextLine();
+
+                    System.out.println("Please provide e\n");
+                    String editionNumber = scan.nextLine();
+
+                    System.out.println("Please provide year\n");
+                    String year = scan.nextLine();
+
+                    System.out.println("Please provide price\n");
+                    String price = scan.nextLine();
+
+                    /*
+                    String isbn = arr_user_input[2];
+                    String title = arr_user_input[3];
+                    int editionNumber = Integer.parseInt(arr_user_input[4]);
+                    String year = arr_user_input[5];
+                    int publisherID = Integer.parseInt(arr_user_input[6]);
+                    float price = Float.parseFloat(arr_user_input[7]);
+                    */
+
                     TitleService titleService = new TitleService();
-                    titleService.getAllTitles(orderInfo);
+                    titleService.addTitle(isbn, title, Integer.parseInt(editionNumber), year, publisherID, Float.parseFloat(price));
+
+                    AuthorISBNService authorISBNService = new AuthorISBNService();
+                    authorISBNService.insertIntoAuthorISBN(authorID, isbn);
+
                     break;
                 default:
                     System.out.println("Give a valid option!");
+                    break;
             }
         }
     }
@@ -181,18 +254,27 @@ public class MainApp {
         String option = arr_user_input[1];
         switch (option){
             case "-a":
-                if (arr_user_input.length != 4) return false;
+                if (arr_user_input.length != 4) {
+                    System.out.println("Please provide correct number of elements");
+                    return false;
+                }
                 break;
             case "-p":
-                if (arr_user_input.length != 3) return false;
+                if (arr_user_input.length < 3) {
+                    System.out.println("Please provide correct number of elements");
+                    return false;
+                }
                 break;
             case "-t":
-                if (arr_user_input.length != 8) return false;
+                if (arr_user_input.length < 1) {
+                    System.out.println("Please provide correct number of elements");
+                    return false;
+                }
                 break;
             default:
                 System.out.println("Give a valid option!");
+                return false;
         }
+        return true;
     }
-
-    public boolean isValidString()
 }

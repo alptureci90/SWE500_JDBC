@@ -16,7 +16,7 @@ public class ConnectToDB {
             // Connect
             System.out.println("Creating Connection...");
             Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Test Connection Successful!");
+            System.out.println("Connection Successful!");
 
 
             /*PreparedStatement pst = conn.prepareStatement("\\list");
