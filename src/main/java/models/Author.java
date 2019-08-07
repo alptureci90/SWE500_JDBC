@@ -41,4 +41,12 @@ public class Author implements Serializable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    @Override
+    public String toString(){
+        int len = 10 + firstName.length() + lastName.length();
+        String result = "||    "+authorID+"    ||   "+firstName+"   ||   "+lastName+"   ||\n"
+                + new String(new char[80]).replace("\0","-");
+        return result;
+    }
 }

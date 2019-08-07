@@ -20,4 +20,11 @@ public class Publisher {
     public void setPublisherName(String publisherName) {
         this.publisherName = publisherName;
     }
+
+    @Override
+    public String toString(){
+        String result = "||       "+publisherID+"    ||   "+publisherName.trim()+"   ||\n"
+                 + new String(new char[50]).replace("\0","-");
+        return result;
+    }
 }

@@ -59,4 +59,16 @@ public class Title implements Serializable {
     public void setPrice(float price) {
         this.price = price;
     }
+
+    @Override
+    public String toString(){
+        String result = "||\t"+isbn+"\t||\t"
+                +title.trim()+"\t\t\t||\t\t"
+                +editionNumber+"\t||\t"
+                +year+"\t||\t"
+                +publisherID+"\t||\t"
+                +price+"\t||\n"
+                + new String(new char[80]).replace("\0","-");
+        return result;
+    }
 }

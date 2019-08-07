@@ -55,13 +55,11 @@ public class MainApp {
     }
 
     public void runService(){
-
-
+        System.out.println(HELP);
         Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
                 System.out.println("Please input a operation number you would like to run");
-                System.out.println(HELP);
                 long then = System.currentTimeMillis();
                 String userInput = scanner.nextLine();
                 decision(userInput);
@@ -94,16 +92,13 @@ public class MainApp {
 
                 default:
                     System.out.println(HELP);
-
-
-
         }
     }
 
     public void list(String[] arr_user_input){
         String select = arr_user_input[1];
         String orderInfo = "ASC";
-        if(arr_user_input.length == 3 && arr_user_input[2].toUpperCase() == "DESC") {
+        if(arr_user_input.length == 3 && arr_user_input[2].toUpperCase().equals("DESC")) {
             orderInfo = "DESC";
         }
         switch (select){
@@ -116,20 +111,88 @@ public class MainApp {
                 publisherService.getAllPublishers(orderInfo);
                 break;
             case "-t":
+                TitleService titleService = new TitleService();
+                titleService.getAllTitles(orderInfo);
+                break;
+            default:
+                System.out.println("Give a valid option!");
         }
 
     }
 
     public void get(String[] arr_user_input){
+        String select = arr_user_input[1];
+        String orderInfo = "ASC";
+        if(arr_user_input.length == 4 && arr_user_input[3].toUpperCase().equals("DESC")) {
+            orderInfo = "DESC";
+        }
+
+        boolean stat = true;
+        int pubID = 0;
+        try{
+            pubID = Integer.parseInt(arr_user_input[2]);
+        } catch (Exception e){
+            stat = false;
+            System.out.println("Error: ");
+            System.out.println("Provide Info in: --get -p <int.pubID> <orderInfo>");
+        }
+        if (stat) {
+            switch (select) {
+                case "-p":
+                    PublisherService publisherService = new PublisherService();
+                    publisherService.getPublisher(pubID);
+                    TitleService titleService = new TitleService();
+                    titleService.getTitlesOfPublisher(pubID, orderInfo);
+                    break;
+                default:
+                    System.out.println("Provide Info in: --get -p <int.pubID> <orderInfo>");
+            }
+        }
 
     }
 
     public void add(String[] arr_user_input){
-
+        String select = arr_user_input[1];
+        if (isCorrectAddForm(arr_user_input)) {
+            switch (select) {
+                case "-a":
+                    AuthorService authorService = new AuthorService();
+                    authorService.addAuthor(arr_user_input[2], arr_user_input[3]);
+                    break;
+                case "-p":
+                    PublisherService publisherService = new PublisherService();
+                    publisherService.addPublisher(arr_user_input[2]);
+                    break;
+                case "-t":
+                    TitleService titleService = new TitleService();
+                    titleService.getAllTitles(orderInfo);
+                    break;
+                default:
+                    System.out.println("Give a valid option!");
+            }
+        }
     }
 
     public void update(String[] arr_user_input){
 
     }
 
+    public boolean isCorrectAddForm(String[] arr_user_input){
+        String option = arr_user_input[1];
+        switch (option){
+            case "-a":
+                if (arr_user_input.length != 4) return false;
+                break;
+            case "-p":
+                if (arr_user_input.length != 3) return false;
+                break;
+            case "-t":
+                if (arr_user_input.length != 8) return false;
+                break;
+            default:
+                System.out.println("Give a valid option!");
+        }
+    }
+
+    public boolean isValidString()
 }

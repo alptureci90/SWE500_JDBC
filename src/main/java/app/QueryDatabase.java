@@ -1,36 +1,45 @@
 package main.java.app;
 
 import main.java.models.Author;
+import main.java.models.Publisher;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class QueryDatabase {
+    Connection connection;
 
     public QueryDatabase(){
-
+        connection = ConnectToDB.getConnection();
     }
 
-    public void getAllAuthors(String orderInfo){
-        Connection connection = ConnectToDB.getConnection();
-        try {
-            String s = "select * from authors order by ?;";
-            PreparedStatement ps = connection.prepareStatement(s);
-            ps.setString(1, orderInfo);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                Author a = new Author();
-                a.setAuthorID(rs.getInt("authorID"));
-                a.setFirstName(rs.getString("firstName"));
-                a.setLastName("lastName");
-            }
-            System.out.println(rs.findColumn("lastName"));
+    public ResultSet executeQuery(String STATEMENT){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(STATEMENT);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            connection.close();
+            return resultSet;
         } catch (SQLException e){
-
+            System.out.println("Unsuccessful retrieving information");
+            ConnectToDB.closeConnection(connection);
+            return null;
         }
-
-        ConnectToDB.closeConnection(connection);
     }
+
+    public boolean execute(String STATEMENT){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(STATEMENT);
+            boolean result = preparedStatement.execute();
+            connection.close();
+            return result;
+        } catch (SQLException e){
+            System.out.println("Unsuccessful retrieving information");
+            ConnectToDB.closeConnection(connection);
+            return false;
+        }
+    }
+
 }

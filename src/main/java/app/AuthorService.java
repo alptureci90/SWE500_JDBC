@@ -10,22 +10,29 @@ import java.util.ArrayList;
 
 public class AuthorService {
 
-    Connection connection;
+    QueryDatabase queryDatabase;
 
     public AuthorService(){
-        connection = ConnectToDB.getConnection();
+        queryDatabase = new QueryDatabase();
     }
 
-    public ArrayList<Author> getAllAuthors(String orderBy){
+    public void getAllAuthors(String orderBy){
         String STATEMENT = "SELECT * FROM authors order by firstName " + orderBy;
-        try{
-            PreparedStatement preparedStatement = connection.prepareStatement(STATEMENT);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return mapResultSet2AuthorList(resultSet);
-        } catch (SQLException e){
+        ResultSet resultSet = queryDatabase.executeQuery(STATEMENT);
+        if (resultSet != null){
+            ArrayList<Author> authorArrayList = mapResultSet2AuthorList(resultSet);
+            printResults(authorArrayList);
+        } else {
             System.out.println("Unsuccessful retrieving ALL AUTHORS");
-            return null;
         }
+    }
+
+    public void addAuthor(String firstName, String lastName){
+        String STATEMENT = "INSERT INTO authors (firstname, lastname) values ('"+ firstName +"','"+lastName+"');";
+        if (queryDatabase.execute(STATEMENT)){
+            System.out.println("Adding to the authors: SUCCESS!");
+        }
+        System.out.println("FAILURE!");
     }
 
     private ArrayList<Author> mapResultSet2AuthorList(ResultSet resultSet){
@@ -43,5 +50,13 @@ public class AuthorService {
             System.out.println("Error in mapping to ArrayListAuthor");
         }
         return null;
+    }
+
+    public void printResults(ArrayList<Author> authorArrayList){
+        String header = "|| authorID || First Name || Last Name ||";
+        System.out.println(header);
+        for (Author a : authorArrayList){
+            System.out.println(a.toString());
+        }
     }
 }
