@@ -37,6 +37,7 @@ public class QueryDatabase {
             return true;
         } catch (SQLException e){
             System.out.println("Unsuccessful retrieving information");
+            System.out.println(e.getMessage());
             ConnectToDB.closeConnection(connection);
             return false;
         }

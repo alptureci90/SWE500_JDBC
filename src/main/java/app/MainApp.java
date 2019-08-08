@@ -162,9 +162,9 @@ public class MainApp {
     }
 
     public void add(String[] arr_user_input){
-        String select = arr_user_input[1];
+        String option = arr_user_input[1];
         if (isCorrectAddForm(arr_user_input)) {
-            switch (select) {
+            switch (option) {
                 case "-a":
                     AuthorService authorService = new AuthorService();
                     authorService.addAuthor(arr_user_input[2], arr_user_input[3]);
@@ -247,6 +247,23 @@ public class MainApp {
     }
 
     public void update(String[] arr_user_input){
+        String option = arr_user_input[1];
+        switch (option){
+            case "-a":
+                System.out.println("updating author");
+                AuthorService authorService = new AuthorService();
+                authorService.updateAuthor(arr_user_input);
+                break;
+            case "-p":
+                System.out.println("updating publisher");
+                PublisherService ps = new PublisherService();
+                ps.updatePublisher(arr_user_input);
+                break;
+            default:
+                System.out.println("give me good input");
+                break;
+
+        }
 
     }
 

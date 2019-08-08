@@ -48,6 +48,35 @@ public class PublisherService{
         }
     }
 
+    public void updatePublisher(String[] arr_full_name){
+        if (arr_full_name != null){
+            if (isID(arr_full_name[2])){
+                int id = Integer.parseInt(arr_full_name[2]);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 3; i <arr_full_name.length; i++){
+                    sb.append(arr_full_name[i] + " ");
+                }
+                String STATEMENT = "update PUBLISHERS set publishername = '" + sb.toString() + "' where publisherid = " + id;
+                if (queryDatabase.execute(STATEMENT)){
+                    System.out.println("Editting the authors: SUCCESS!");
+                } else {
+                    System.out.println("FAILURE!");
+                }
+            }
+        } else {
+            System.out.println("give good authors name");
+        }
+    }
+
+    public boolean isID(String prospectiveID){
+        try{
+            Integer.parseInt(prospectiveID);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     public boolean isIDExists(int id){
         String STATEMENT = "select exists(select 1 from publishers where publisherid = " + id + ");";
         ResultSet resultSet = queryDatabase.executeQuery(STATEMENT);

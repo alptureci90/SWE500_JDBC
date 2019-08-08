@@ -22,8 +22,8 @@ public class AuthorService {
         if (resultSet != null){
             ArrayList<Author> authorArrayList = mapResultSet2AuthorList(resultSet);
             printResults(authorArrayList);
-        } else {
-            System.out.println("Unsuccessful retrieving ALL AUTHORS");
+                } else {
+                    System.out.println("Unsuccessful retrieving ALL AUTHORS");
         }
     }
 
@@ -33,6 +33,33 @@ public class AuthorService {
             System.out.println("Adding to the authors: SUCCESS!");
         } else {
             System.out.println("FAILURE!");
+        }
+    }
+
+    public void updateAuthor(String[] arr_full_name){
+        if (arr_full_name != null && arr_full_name.length == 5){
+            if (isID(arr_full_name[2])){
+                int i = Integer.parseInt(arr_full_name[2]);
+                String firstName = arr_full_name[3];
+                String lastName = arr_full_name[4];
+                String STATEMENT = "update authors set firstname = '" + firstName + "', lastname = '" + lastName + "' where authorID = " + i;
+                if (queryDatabase.execute(STATEMENT)){
+                    System.out.println("Editting the authors: SUCCESS!");
+                } else {
+                    System.out.println("FAILURE!");
+                }
+            }
+        } else {
+            System.out.println("give good authors name");
+        }
+    }
+
+    public boolean isID(String prospectiveID){
+        try{
+            Integer.parseInt(prospectiveID);
+            return true;
+        } catch (Exception e){
+            return false;
         }
     }
 
