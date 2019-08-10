@@ -5,8 +5,8 @@ import java.sql.*;
 public class ConnectToDB {
 
     private static final String DB_NAME = "db_bookstore";
-    private static final String USERNAME = "bookstore_admin";
-    private static final String PASSWORD = "bookstore_admin";
+    private static final String USERNAME = "db_bookadmin";
+    private static final String PASSWORD = "db_bookadmin";
     private static final String URL = "jdbc:postgresql://localhost:5432/db_bookstore";
 
 
@@ -20,7 +20,7 @@ public class ConnectToDB {
 
 
             /*PreparedStatement pst = conn.prepareStatement("\\list");
-            ResultSet result = pst.executeQuery();*/
+            ResultSet resPlease input a operation numberult = pst.executeQuery();*/
 
             // Close
             System.out.println("Closing Connection...");

@@ -1,7 +1,6 @@
 package main.java.app;
 
 import main.java.models.Publisher;
-import sun.applet.Main;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -16,7 +15,7 @@ public class MainApp {
             "\n --list -a : retrieves all authors." + DEF_ORDER_INFO +
             "\n --list -p : retrieves all publishers. " + DEF_ORDER_INFO +
             "\n --list -t : retrieves all titles." + DEF_ORDER_INFO +
-            "\n --get -p <publisher name> : lists all the available inventory for that publisher." + DEF_ORDER_INFO +
+            "\n --get -p <int.pubID> <orderInfo> : lists all the available inventory for that publisher." + DEF_ORDER_INFO +
             "\n --add -a <First Name> <Last Name>" +
             "\n --update -a <id> <new First Name> <new Last Name>" +
             "\n --add -t" +
@@ -270,6 +269,12 @@ public class MainApp {
     public boolean isCorrectAddForm(String[] arr_user_input){
         String option = arr_user_input[1];
         switch (option){
+            case "-t":
+                if (arr_user_input.length < 1) {
+                    System.out.println("Please provide correct number of elements");
+                    return false;
+                }
+                break;
             case "-a":
                 if (arr_user_input.length != 4) {
                     System.out.println("Please provide correct number of elements");
@@ -278,12 +283,6 @@ public class MainApp {
                 break;
             case "-p":
                 if (arr_user_input.length < 3) {
-                    System.out.println("Please provide correct number of elements");
-                    return false;
-                }
-                break;
-            case "-t":
-                if (arr_user_input.length < 1) {
                     System.out.println("Please provide correct number of elements");
                     return false;
                 }

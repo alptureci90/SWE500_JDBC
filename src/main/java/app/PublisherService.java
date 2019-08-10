@@ -12,6 +12,10 @@ import java.util.ArrayList;
 public class PublisherService{
 
     QueryDatabase queryDatabase;
+    int maxPublisherNameLength = 0;
+    int maxId = 0;
+    String publisherNameString = "Publisher Name";
+    String idString = "publisherID";
 
     public PublisherService(){
         queryDatabase = new QueryDatabase();
@@ -112,10 +116,28 @@ public class PublisherService{
 
     public void printResults(ArrayList<Publisher> publisherArrayList){
         if (publisherArrayList != null) {
-            String header = "|| publisherID || Publisher Name ||";
+
+            publisherArrayList.forEach(x ->
+            {
+                maxPublisherNameLength = Math.max(maxPublisherNameLength, x.getPublisherName().length());
+                maxId = Math.max(maxId, x.getPublisherID());
+            });
+
+            maxPublisherNameLength = Math.max(maxPublisherNameLength, publisherNameString.length());
+
+            String header = String.format("||%" + OutputService.SL(maxId, idString) + "s" + idString + "%" + OutputService.SR(maxId, idString) + "s" +
+                    "||%" + OutputService.SL(maxPublisherNameLength, publisherNameString) + "s" + publisherNameString + "%" + OutputService.SR(maxPublisherNameLength, publisherNameString) + "s" +
+                    "||", "", "", "", "");
             System.out.println(header);
             for (Publisher p : publisherArrayList) {
-                System.out.println(p.toString());
+
+                String publisherIdString = Integer.toString(p.getPublisherID());
+
+                String publisher = String.format("||%" + OutputService.SL(maxId, publisherIdString) + "s" + publisherIdString + "%" + OutputService.SR(maxId, publisherIdString) + "s" +
+                        "||%" + OutputService.SL(maxPublisherNameLength, p.getPublisherName()) + "s" + p.getPublisherName() + "%" + OutputService.SR(maxPublisherNameLength, p.getPublisherName()) + "s" +
+                        "||", "", "", "", "");
+
+                System.out.println(publisher);
             }
         } else {System.out.println("Publisher List is Empty!");}
     }

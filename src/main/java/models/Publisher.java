@@ -14,7 +14,7 @@ public class Publisher {
     }
 
     public String getPublisherName() {
-        return publisherName;
+        return publisherName.trim();
     }
 
     public void setPublisherName(String publisherName) {

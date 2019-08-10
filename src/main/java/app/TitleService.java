@@ -10,6 +10,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TitleService {
+
+    int maxISBNLength = 0;
+    int maxTitleLength = 0;
+    int maxEdLength = 0;
+    int maxYearLength = 0;
+    int maxPubIDLength = 0;
+    int maxPriceLength = 0;
+    
+    String ISBNString = "ISBN";
+    String titleString = "Title";
+    String edString = "Ed. #";
+    String yearString = "Year";
+    String pubIdString = "Publisher Id";
+    String priceString = "Price";
+
     QueryDatabase queryDatabase;
     public TitleService(){
         queryDatabase = new QueryDatabase();
@@ -86,17 +101,43 @@ public class TitleService {
 
     public void printResults(ArrayList<Title> titleArrayList){
         if (titleArrayList != null) {
-            String header =
-                    "||\tisbn\t\t" +
-                    "||\tTitle\t\t\t\t\t" +
-                    "||\tEd. #\t" +
-                    "||\tyear\t" +
-                    "||\tpubID\t" +
-                    "||\tprice\t" +
-                    "||";
+
+            titleArrayList.forEach(x ->
+            {
+                maxISBNLength = Math.max(maxISBNLength, x.getIsbn().length());
+                maxTitleLength = Math.max(maxTitleLength, x.getTitle().length());
+                maxEdLength = Math.max(maxEdLength, Integer.toString(x.getEditionNumber()).length());
+                maxYearLength = Math.max(maxYearLength, x.getYear().length());
+                maxPubIDLength = Math.max(maxPubIDLength, Integer.toString(x.getPublisherID()).length());
+                maxPriceLength = Math.max(maxPriceLength, Float.toString(x.getPrice()).length());
+            });
+
+            maxISBNLength = Math.max(maxISBNLength,ISBNString.length());
+            maxTitleLength = Math.max(maxTitleLength, titleString.length());
+            maxEdLength = Math.max(maxEdLength, edString.length());
+            maxYearLength = Math.max(maxYearLength, yearString.length());
+            maxPubIDLength = Math.max(maxPubIDLength, pubIdString.length());
+            maxPriceLength = Math.max(maxPriceLength, priceString.length());
+
+            String header = String.format("||%" + OutputService.SL(maxISBNLength,ISBNString) + "s" + ISBNString + "%" + OutputService.SR(maxISBNLength,ISBNString) + "s" +
+                    "||%" + OutputService.SL(maxTitleLength,titleString) + "s" + titleString + "%" + OutputService.SR(maxTitleLength,titleString) + "s" +
+                    "||%" + OutputService.SL(maxEdLength,edString) + "s" + edString + "%" + OutputService.SR(maxEdLength,edString) + "s" +
+                    "||%" + OutputService.SL(maxYearLength,yearString) + "s" + yearString + "%" + OutputService.SR(maxYearLength,yearString) + "s" +
+                    "||%" + OutputService.SL(maxPubIDLength,pubIdString) + "s" + pubIdString + "%" + OutputService.SR(maxPubIDLength,pubIdString) + "s" +
+                    "||%" + OutputService.SL(maxPriceLength,priceString) + "s" + priceString + "%" + OutputService.SR(maxPriceLength,priceString) + "s" +
+                    "||", "", "", "", "", "", "","","","","","","");
             System.out.println(header);
-            for (Title p : titleArrayList) {
-                System.out.println(p.toString());
+
+            for (Title t : titleArrayList) {
+
+                String title = String.format("||%" + OutputService.SL(maxISBNLength,t.getIsbn()) + "s" + t.getIsbn() + "%" + OutputService.SR(maxISBNLength,t.getIsbn()) + "s" +
+                        "||%" + OutputService.SL(maxTitleLength,t.getTitle()) + "s" + t.getTitle() + "%" + OutputService.SR(maxTitleLength,t.getTitle()) + "s" +
+                        "||%" + OutputService.SL(maxEdLength,Integer.toString(t.getEditionNumber())) + "s" + t.getEditionNumber() + "%" + OutputService.SR(maxEdLength,Integer.toString(t.getEditionNumber())) + "s" +
+                        "||%" + OutputService.SL(maxYearLength,t.getYear()) + "s" + t.getYear() + "%" + OutputService.SR(maxYearLength,t.getYear()) + "s" +
+                        "||%" + OutputService.SL(maxPubIDLength,Integer.toString(t.getPublisherID())) + "s" + t.getPublisherID() + "%" + OutputService.SR(maxPubIDLength,Integer.toString(t.getPublisherID())) + "s" +
+                        "||%" + OutputService.SL(maxPriceLength,Float.toString(t.getPrice())) + "s" + t.getPrice() + "%" + OutputService.SR(maxPriceLength,Float.toString(t.getPrice())) + "s" +
+                        "||", "", "", "", "", "", "","","","","","","");
+                System.out.println(title);
             }
         } else {System.out.println("Title List is Empty!");}
     }
